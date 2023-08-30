@@ -41,6 +41,11 @@ Execute a query retrieved from a file.
 python3 sparqly_query.py --source https://dbpedia.org/sparql sample.rq
 ```
 
+Append text to the end of the query.
+```bash
+python3 sparqly_query.py --source https://dbpedia.org/sparql sample.rq --append 'LIMIT 10'
+```
+
 Same as above, the default endpoint is https://dbpedia.org/sparql.
 ```bash
 python3 sparqly_query.py sample.rq

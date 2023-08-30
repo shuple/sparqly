@@ -29,6 +29,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=os.path.basename(__file__))
     parser.add_argument('query', nargs='?', help='query string or file')
     parser.add_argument('-s', '--source', action='append', help='sparql endpoint or RDF file')
+    parser.add_argument('-a', '--append-query', default='', help='append text to the end of the query')
 
     # example
     parser.add_argument('-e', '--example', action='store_true', default=False, help='print example then exit')
@@ -63,5 +64,5 @@ if __name__ == '__main__':
         query = args['query']
 
     graph = sparqly.SPARQLy()
-    result = graph.query(args['source'], query)
+    result = graph.query(args['source'], query + f" {args['append_query']}")
     print(json.dumps(result['results']['bindings'], indent=2, default=str))
