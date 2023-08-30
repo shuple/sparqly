@@ -1,0 +1,7 @@
+# Python 3.11.1
+
+# SPARQL
+SPARQLWrapper==2.0.0
+
+# RDF
+rdflib==7.0.0
