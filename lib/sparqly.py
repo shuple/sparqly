@@ -54,6 +54,44 @@ class SPARQLy:
             self.sparql_endpoints[sparql_endpoint] = SPARQLWrapper.SPARQLWrapper(sparql_endpoint)
         return self.sparql_endpoints[sparql_endpoint]
 
+    # print self.query()['results']['bindings'] in table format
+    #
+    # data : self.query()['results']['bindings']
+    #
+    @classmethod
+    def print_table(cls, data):
+        # gather all unique column
+        columns = list(set(key for record in data for key in record.keys()))
+
+        table_data = []
+        for record in data:
+            row = [record[col]['value'] if col in record else '' for col in columns]
+            table_data.append(row)
+
+        # calculate the max widths for each column
+        max_widths = [max([len(str(cell)) for cell in column] + [len(column)]) for column in zip(*table_data, columns)]
+
+        # print column
+        print(' ' + ' | '.join([column.center(width) for column, width in zip(columns, max_widths)]))
+
+        # print horizontal line
+        print("-" + "-+-".join(['-' * width for width in max_widths]) + "-")
+
+        # align left for string, otherwise align right
+        alignments = []
+        for col in columns:
+            # check if any entry in a column is of type 'typed-literal' and only contains digits (possibly including a decimal point)
+            has_pure_number = any(
+                record[col]['type'] == 'typed-literal' and re.match(r"^\d+(\.\d+)?$", record[col]['value'])
+                for record in data if col in record
+            )
+            # if the column contains any pure numerical values, align right; else, align left
+            alignments.append('r' if has_pure_number else 'l')
+
+        # print row
+        for row in table_data:
+            print(' ' + ' | '.join([(str(cell).ljust(width) if alignment == 'l' else str(cell).rjust(width)) for cell, width, alignment in zip(row, max_widths, alignments)]))
+
     # return caller method name
     #
     @classmethod

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
-import argparse, json
+import argparse
 
 root_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, f'{root_path}/lib')
@@ -65,4 +65,4 @@ if __name__ == '__main__':
 
     graph = sparqly.SPARQLy()
     result = graph.query(args['source'], query + f" {args['append_query']}")
-    print(json.dumps(result['results']['bindings'], indent=2, default=str))
+    sparqly.SPARQLy.print_table(result['results']['bindings'])
