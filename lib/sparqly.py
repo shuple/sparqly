@@ -54,20 +54,18 @@ class SPARQLy:
             self.sparql_endpoints[sparql_endpoint] = SPARQLWrapper.SPARQLWrapper(sparql_endpoint)
         return self.sparql_endpoints[sparql_endpoint]
 
-    # print self.query()['results']['bindings'] in table format
+    # print return value of self.query() in table format
     #
-    # data : self.query()['results']['bindings']
+    # data : self.query()
     #
     @classmethod
     def print_table(cls, data):
-        if len(data) == 0:
+        columns, bindings = data['head']['vars'], data['results']['bindings']
+        if len(bindings) == 0:
             return
 
-        # gather all unique column
-        columns = list(set(key for record in data for key in record.keys()))
-
         table_data = []
-        for record in data:
+        for record in bindings:
             row = [record[col]['value'] if col in record else '' for col in columns]
             table_data.append(row)
 
@@ -86,7 +84,7 @@ class SPARQLy:
             # check if any entry in a column is of type 'typed-literal' and only contains digits (possibly including a decimal point)
             has_pure_number = any(
                 record[col]['type'] == 'typed-literal' and re.match(r"^\d+(\.\d+)?$", record[col]['value'])
-                for record in data if col in record
+                for record in bindings if col in record
             )
             # if the column contains any pure numerical values, align right; else, align left
             alignments.append('r' if has_pure_number else 'l')
