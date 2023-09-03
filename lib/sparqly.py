@@ -60,6 +60,9 @@ class SPARQLy:
     #
     @classmethod
     def print_table(cls, data):
+        if len(data) == 0:
+            return
+
         # gather all unique column
         columns = list(set(key for record in data for key in record.keys()))
 
