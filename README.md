@@ -51,6 +51,11 @@ Same as above, the default endpoint is https://dbpedia.org/sparql.
 python3 sparqly_query.py sample.rq
 ```
 
+Change the default endpoint by assigning $sparqly_endpoint environment variable.
+```bash
+export sparqly_endpoint='https://dbpedia.org/sparql'
+```
+
 The endpoint can also be a file. Utilize the --source flag to indicate multiple files in a chain.
 ```bash
 python3 sparqly_query.py -s foaf_index.rdf -s sample.ttl sample.rq
