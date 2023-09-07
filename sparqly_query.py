@@ -49,7 +49,7 @@ def parse_args():
         sys.exit(1)
 
     # sparql_endpoint or rdf_file
-    args['source'] = args['source'] or [ os.environ.get('source', 'https://dbpedia.org/sparql') ]
+    args['source'] = args['source'] or [ os.environ.get('sparqly_endpoint', 'https://dbpedia.org/sparql') ]
 
     return args
 
