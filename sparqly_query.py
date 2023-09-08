@@ -28,9 +28,9 @@ def parse_args():
     # application option
     parser = argparse.ArgumentParser(description=os.path.basename(__file__))
     parser.add_argument('query', nargs='?', help='query string or file')
-    parser.add_argument('-s', '--source', action='append', help='sparql endpoint or RDF file')
     parser.add_argument('-a', '--append-query', default='', help='append text to the end of the query')
     parser.add_argument('-f', '--format', default='table', help='json, table')
+    parser.add_argument('-s', '--source', action='append', help='sparql endpoint or RDF file')
 
     # example
     parser.add_argument('-e', '--example', action='store_true', default=False, help='print example then exit')
