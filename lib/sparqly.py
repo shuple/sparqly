@@ -11,7 +11,7 @@ class SPARQLy:
 
     # query sparql_endpoint or local file
     #
-    # query  : sparql query string
+    # query  : sparql string
     # source : URL or local file
     #
     def query(self, source, query):
@@ -27,7 +27,7 @@ class SPARQLy:
     # query local file
     #
     # rdf_files : list of rdf_file
-    # query     : sparql query string
+    # query     : sparql string
     #
     @classmethod
     def local_query(cls, rdf_files, query):
@@ -41,7 +41,7 @@ class SPARQLy:
     # query remote URL
     #
     # sparql_endpoint : URL
-    # query           : sparql query string
+    # query           : sparql string
     #
     def remote_query(self, sparql_endpoint, query):
         sparql = self.sparql_endpoints.get(sparql_endpoint, self.get_sparql_endpoint(sparql_endpoint))
@@ -60,7 +60,7 @@ class SPARQLy:
 
     # extract PREFIX in query and store it in { PREFIX: URI } format
     #
-    # query : sparql query string
+    # query : sparql string
     #
     @classmethod
     def get_prefixes(cls, query):
@@ -96,9 +96,9 @@ class SPARQLy:
                 item[field] = item[field].replace(uri, f'{prefix}:')
         return item
 
-    # print return value of self.query()
+    # print return value of cls.query()
     #
-    # data   : self.query()
+    # data   : cls.query()
     # format : 'json' or 'table'
     #
     @classmethod
@@ -110,9 +110,9 @@ class SPARQLy:
             # default method
             print(json.dumps(data, indent=2, default=str))
 
-    # print return value of self.query() in table format
+    # print return value of cls.query() in table format
     #
-    # data : self.query()
+    # data : cls.query()
     #
     @classmethod
     def print_table(cls, data):
