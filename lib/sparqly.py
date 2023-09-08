@@ -54,6 +54,20 @@ class SPARQLy:
             self.sparql_endpoints[sparql_endpoint] = SPARQLWrapper.SPARQLWrapper(sparql_endpoint)
         return self.sparql_endpoints[sparql_endpoint]
 
+    # print return value of self.query()
+    #
+    # data   : self.query()
+    # format : 'json' or 'table'
+    #
+    @classmethod
+    def print(cls, data, method):
+        method = f'print_{method}'
+        if hasattr(cls, method) and callable(getattr(cls, method)):
+            return getattr(cls, method)(data)
+        else:
+            # default method
+            print(json.dumps(data, indent=2, default=str))
+
     # print return value of self.query() in table format
     #
     # data : self.query()
