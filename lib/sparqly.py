@@ -16,9 +16,13 @@ class SPARQLy:
     #
     def query(self, source, query):
         if re.match(r'^(https?://)[^\s/$.?#].[^\s]*$', source[0]):
-            return self.remote_query(sparql_endpoint=source[0], query=query)
+            data = self.remote_query(sparql_endpoint=source[0], query=query)
         else:
-            return self.local_query(rdf_files=source, query=query)
+            data = self.local_query(rdf_files=source, query=query)
+
+        prefixes = self.get_prefixes(query)
+        data['results']['bindings'] = self.substitute_uri_with_prefix(data['results']['bindings'], prefixes)
+        return data
 
     # query local file
     #
@@ -53,6 +57,44 @@ class SPARQLy:
         if sparql_endpoint not in self.sparql_endpoints:
             self.sparql_endpoints[sparql_endpoint] = SPARQLWrapper.SPARQLWrapper(sparql_endpoint)
         return self.sparql_endpoints[sparql_endpoint]
+
+    # extract PREFIX in query and store it in { PREFIX: URI } format
+    #
+    # query : sparql query string
+    #
+    @classmethod
+    def get_prefixes(cls, query):
+        prefix_pattern = r'PREFIX\s+([a-z0-9_#-]+):\s+<([^>]+)>'
+        if matches := re.findall(prefix_pattern, query, re.IGNORECASE | re.MULTILINE):
+            return { match[0]: match[1] for match in matches }
+        else:
+            return {}
+
+    # substitute URI with PREFIX
+    #
+    # bindings : cls.query()['results']['bindings']
+    # prefixes : cls.get_prefixes()
+    #
+    @classmethod
+    def substitute_uri_with_prefix(cls, bindings, prefixes):
+        for binding in bindings:
+            for key, item in binding.items():
+                for field in ['value', 'datatype']:
+                    item = cls.substitute_in_field(item, field, prefixes)
+        return bindings
+
+    # substitute the URI in a given field of the item with its corresponding PREFIX
+    #
+    # item     : bindings[i][key]
+    # field    : 'value' or 'datatype'
+    # prefixes : cls.get_prefixes()
+    #
+    @classmethod
+    def substitute_in_field(cls, item, field, prefixes):
+        for prefix, uri in prefixes.items():
+            if field in item and item[field].startswith(uri):
+                item[field] = item[field].replace(uri, f'{prefix}:')
+        return item
 
     # print return value of self.query()
     #
