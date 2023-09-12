@@ -126,7 +126,9 @@ class SPARQLy:
             table_data.append(row)
 
         # calculate the max widths for each column
-        max_widths = [max([len(str(cell)) for cell in column] + [len(column)]) for column in zip(*table_data, columns)]
+        data_widths = [max([len(str(cell)) for cell in column]) for column in zip(*table_data)]
+        column_names_widths = [len(column) for column in columns]
+        max_widths = [max(data, col_name) for data, col_name in zip(data_widths, column_names_widths)]
 
         # print column
         print(' ' + ' | '.join([column.center(width) for column, width in zip(columns, max_widths)]))
