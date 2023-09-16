@@ -31,10 +31,25 @@ class SPARQLy:
     #
     @classmethod
     def local_query(cls, rdf_files, query):
-        graph = rdflib.Graph()
+        dataset = rdflib.ConjunctiveGraph()
+
+        # pass rdf_files argument into the default graph
         for rdf_file in rdf_files:
-            graph.parse(rdf_file)
-        results = graph.query(query)
+            if os.path.exists(rdf_file):
+                dataset.parse(rdf_file)
+
+        # extract all file paths from the FROM clauses and parse them into the default graph
+        default_graph_files = re.findall(r'FROM\s*<([^>]+)>', query, re.IGNORECASE)
+        for rdf_file in default_graph_files:
+            dataset.parse(rdf_file)
+
+        # Extract all file paths from the FROM NAMED clauses and parse them into named graphs
+        named_graph_files = re.findall(r'FROM NAMED\s*<([^>]+)>', query, re.IGNORECASE)
+        for rdf_file in named_graph_files:
+            named_graph = rdflib.Graph(store=dataset.store, identifier=rdflib.URIRef(rdf_file))
+            named_graph.parse(rdf_file)
+
+        results = dataset.query(query)
         serialize = results.serialize(format='json')
         return json.loads(serialize.decode('utf-8'))
 
