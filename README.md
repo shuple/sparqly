@@ -4,7 +4,7 @@ SPARQLy is a Python CLI companion for effortless SPARQL endpoint and RDF file in
 Send queries from stdin or files, access remote endpoints like DBpedia, and kickstart exploration with a sample query.
 
 ## Requirement
-The script requires Python 3.8 and above.
+The script requires Python 3.8 or above.
 
 ```bash
 ptyhon3 --version
