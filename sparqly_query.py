@@ -13,7 +13,7 @@ import logging_wrapper as logging
 def example():
     """ Provides example usage instructions for the script and exits """
     filename = os.path.basename(__file__)
-    print(f'''   # {filename} - SPARQL query driver
+    print(f'''   # {filename} - Run SPARQL query against the RDF files or the SPARQL endpoint
 
     # default endpoint https://dbpedia.org/sparql and use query file dbpedia/sample.rq
     python3 {filename} dbpedia/sample.rq
