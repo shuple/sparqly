@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# Run SPARQL query against the RDF files or the SPARQL endpoint.
+
 import os, sys
 import argparse
 
@@ -8,9 +10,8 @@ sys.path.insert(0, f'{root_path}/lib')
 import sparqly
 import logging_wrapper as logging
 
-# return example usage and exit program
-#
 def example():
+    """ Provides example usage instructions for the script and exits """
     filename = os.path.basename(__file__)
     print(f'''   # {filename} - SPARQL query driver
 
@@ -22,10 +23,8 @@ def example():
     ''')
     sys.exit(1)
 
-# return command line arguments in dict
-#
 def parse_args():
-    # application option
+    """ Returns dict: Parsed command line arguments """
     parser = argparse.ArgumentParser(description=os.path.basename(__file__))
     parser.add_argument('query', nargs='?', help='query string or file')
     parser.add_argument('-a', '--append-query', default='', help='append text to the end of the query')
