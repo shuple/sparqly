@@ -64,5 +64,5 @@ if __name__ == '__main__':
         query = args['query']
 
     graph = sparqly.SPARQLy()
-    data = graph.query(args['source'], query + f" {args['append_query']}")
+    data = graph.query(query + f" {args['append_query']}", args['source'])
     sparqly.SPARQLy.print(data, method=args['format'])

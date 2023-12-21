@@ -11,28 +11,28 @@ class SPARQLy:
     def __init__(self):
         self.sparql_endpoints = {}
 
-    def query(self, source, query):
+    def query(self, query, source):
         """
         Executes a SPARQL query against the RDF files or the remote endpoint.
 
         Args:
-            source (str): The source file or the SPARQL remote endpoint.
             query (str): The SPARQL query string to be executed.
+            source (str): The source file or the SPARQL remote endpoint.
 
         Returns:
             dict: The result of the query as returned by rdflib or SPARQLWrapper.
         """
         if re.match(r'^(https?://)[^\s/$.?#].[^\s]*$', source[0]):
-            data = self.remote_query(sparql_endpoint=source[0], query=query)
+            data = self.remote_query(query=query, sparql_endpoint=source[0])
         else:
-            data = self.local_query(rdf_files=source, query=query)
+            data = self.local_query(query=query, rdf_files=source)
 
         prefixes = self.get_prefixes(query)
         data['results']['bindings'] = self.substitute_uri_with_prefix(data['results']['bindings'], prefixes)
         return data
 
     @classmethod
-    def local_query(cls, rdf_files, query):
+    def local_query(cls, query, rdf_files):
         """
         Executes a SPARQL query against the RDF files.
 
@@ -65,12 +65,12 @@ class SPARQLy:
         serialize = results.serialize(format='json')
         return json.loads(serialize.decode('utf-8'))
 
-    def remote_query(self, sparql_endpoint, query):
+    def remote_query(self, query, sparql_endpoint):
         """
         Executes a SPARQL query against the remote endpoint.
 
         Args:
-            sparl_endpoint (str): The SPARQL remote endpoint.
+            sparql_endpoint (str): The SPARQL remote endpoint.
             query (str): The SPARQL query string to be executed.
 
         Returns:
